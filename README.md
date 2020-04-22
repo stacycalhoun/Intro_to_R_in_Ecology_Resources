@@ -7,7 +7,7 @@ The documents saved within this repository are intended to be used as an introdu
 a coding component.
 
 The Intro to R lab exercise introduces some basic coding concepts and is designed to have the instructor walk through it
-with the students so that additional instructions or tailoring the code/concepts for the specific course can be made.
+with the students so that additional instructions and/or tailoring of the code or concepts for the specific course can be made.
 
 Cheat sheets are downloaded from the rstudio website under the resources->cheatsheets tabs.
 

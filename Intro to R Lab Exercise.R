@@ -232,11 +232,12 @@ Species_Occ$Transformed_Occ = NULL
 
 # Basic Plotting ---------------------------------------------------------------
 
-#Using the data we pulled from the GBIF database, we will use ggplot to plot the number of occurrences per year as a line graph, and as a bar graph.
+# Using the data in the excel file we imported (blue crab occurence data pulled from GBIF),
+# we will use ggplot to plot the number of occurrences per year as a line graph, and as a bar graph.
 
 #Line plot
 # Within the ggplot() function, you list the name of your dataframe and the x and y variables 
-Species_line = ggplot(Species_Occ, aes(Year, Occ)) +
+Species_line = ggplot(excel_example, aes(year, occurence)) +
   geom_point(color = "purple", shape = 1) +
   geom_line(color = "green", linetype = 2) +
   theme_classic() +
@@ -246,13 +247,14 @@ plot(Species_line)
 
 
 #Bar plot
-Species_bar = ggplot(Species_Occ, aes(Year, Occ)) +
+Species_bar = ggplot(excel_example, aes(year, occurence)) +
   geom_bar(stat = "identity", fill = "blue") +
   theme_classic() +
   labs(title = "Occurences of Blue Crab from 1990-2009", x = "Year", y = "Number of Occurences")
 
 plot(Species_bar)
 
+# Now try it yourself! Change the titles and colors of the plots to match your species of choice
 
 # Organizing your code ----------------------------------------------------
 

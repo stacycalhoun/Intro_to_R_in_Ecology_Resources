@@ -136,7 +136,7 @@ getwd()
 # ***If you are having trouble reading in data, check to make sure your working directory is where your files are located!!***
 
 # Reading in csv files
-csv_example = read.csv("Practice_csv_dataset.csv")
+csv_example = read.csv("Practice_csv_dataframe.csv")
 
 # Reading in excel files. The readxl library must be loaded to read in excel files!
 # The number at the end of the command tells R which sheet in the workbook to pull from 

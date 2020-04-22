@@ -233,8 +233,19 @@ Species_Occ$Transformed_Occ = NULL
 # Basic Plotting ---------------------------------------------------------------
 
 # Using the data in the excel file we imported (blue crab occurence data pulled from GBIF),
-# we will use ggplot to plot the number of occurrences per year as a line graph, and as a bar graph.
+# we will use base R and ggplot to plot the number of occurrences per year as a line graph, and as a bar graph.
 
+#Base R
+#Line plot. To customize this plot, you can change the point color (the 1st col), point shape (pch), and line color (col inside the lines parentheses), and label names
+with(example_excel, plot(year, occurence, col = "purple", pch = 20, main = "Occurences of Blue Crab from 1990-2009", 
+                       xlab = "Year", ylab = "Occurence", lines(year, occurence, col = 'blue'))) 
+
+#Base R bar plot. To customize this plot, you can change the fill color (col) and change label names, or y-axis range (ylim)
+barplot(example_excel$occurence, main = "Occurences of Blue Crab from 1990-2009", 
+        xlab = "Year", ylab = "Occurence", col = "green", names.arg = Species_Occ$year, ylim = c(0, 4e+07))
+
+
+#ggplot
 #Line plot
 # Within the ggplot() function, you list the name of your dataframe and the x and y variables 
 Species_line = ggplot(excel_example, aes(year, occurence)) +
@@ -244,7 +255,6 @@ Species_line = ggplot(excel_example, aes(year, occurence)) +
   labs(title = "Occurences of Blue Crab from 1990-2009", x = "Year", y = "Number of Occurences")
 
 plot(Species_line)
-
 
 #Bar plot
 Species_bar = ggplot(excel_example, aes(year, occurence)) +

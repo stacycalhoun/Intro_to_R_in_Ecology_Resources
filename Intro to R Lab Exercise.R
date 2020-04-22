@@ -133,7 +133,7 @@ getwd()
 
 # Reading in datasets ------------------------------------------------------
 # One of the main functionalities of R is being able to read in pre-existing datasets to further manipulate or analyze.
-# ***If you are having trouble reading in data, check to make sure your working directory is where your files are located!!***
+# ***If you are having trouble reading in data, check to make sure your working directory is set to where your files are located!!***
 
 # Reading in csv files
 csv_example = read.csv("Practice_csv_dataframe.csv")

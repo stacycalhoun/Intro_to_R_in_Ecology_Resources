@@ -11,10 +11,10 @@
   # Google and Stack Overflow are your friends! Can't remember a command? Google it! Getting an error you don't understand? Google it!
   # Don't be afraid to use and adapt other people's code! No one remembers everything off the top of their heads and if someone else has a
   #   script that works, use it! Don't feel like you have to reinvent the wheel!
-  # Not sure what a function or command does? In the console pane, type ?+the function you want more information about and hit enter.
+  # Not sure what a function or command does? In the console pane, type ?+the function you want more information about (example: ?ddply) and hit enter.
   #   The description of the function will show up under the "Help tab" in the bottom right pane.
 
-# To run a line of code, you can: place your cursor in the line you wish to run or highlight the line or lines
+# To run a line of code, you can: place your cursor in the line you wish to run or highlight the line or lines of code
 # and click "Run" at the top of the code editor pane OR you can use the keyboard shortcut ctrl+enter for Windows or command+enter for Macs
 
 # Basic math --------------------------------------------------------------
@@ -51,36 +51,153 @@ exp(450)
 
 # Assigning a variable stores a value or character string (a word or series of words) with the assigned name
 # This allows you to use the variable in multiple places in your code, but it only has to be changed in one place.
+
 # There are three main ways to assign variables <- , = , assign()
 
 lion <- 15
+# Typing out and running a variable (example in the line below) will print its assigned value in the console 
 Lion 
 
+# Why isn't 'Lion' found? (Hint: Check the spelling!) Fix the issue and run the line again.
+
 tiger = 2
+tiger
 
 assign("bear", 23)
+bear
 
-# Once variables are assigned a value, you can use them instead of the values for mathematical functions
+# Once variables are assigned a value, you can use them instead of the numerical values for mathematical functions, as described above.
 
 tiger + lion + bear
 
 (lion - tiger)*bear
 
 # Creating vectors --------------------------------------------------------
+# A vector is a simple data structure in R. It combines elements of the same type under an assigned name
 
-# Combining elements into a vector
-
+# Combining elements into a vector. The c() here groups the elements inside the parentheses together.
 x = c(1, 4, 7, 13)
 
 fruit = c("apple", "orange", "banana", "pineapple")
 
 #Creating sequences
+# Sequences are like vectors, but they have a numerical pattern to them. 
+# Suppose you want a vector that has all of the numbers between 1 and 50. 
+# This would be considered a sequence.
 
+# This assigns all values between the range 1 to 13 to vector "y", including 1 and 13
 y = 1:13
 
+# The seq() command allows you to specify a range and to assign all values between those numbers that are a defined step apart.
+# For example, the following line will assign all of the numbers between 1 and 5 every 0.5 steps
 z = seq(1, 5, by = 0.5)
 
+# Installing and loading libraries ----------------------------------------
 
+# R packages or libraries expand the utility of R, and can make coding easier. Here we will install some basic packages that have broad uses. 
+
+# As with many things, there is more than one way to install packages.
+
+# Method one
+install.packages("tidyverse", "dplyr", "plyr", "ggplot2", "ggThemeAssist", "dismo", "readxl")
+
+# Method 2 (my preferred method): Go to "Tools" in the menu bar at the top of the screen. Select "Install Packages". A screen will pop up that will
+# allow you to type in a list of packages. 
+#Once your list is complete, make sure there is a check in the "Install Dependencies" box,
+# then click "Install". Try this method with the package called "beepr"
+
+#Loading packages. Once packages are installed, they have to be loaded before you can use any of their functions
+library(tidyverse)
+library(plyr)
+library(readxl)
+
+#Loading lots of packages. The lapply() function here applies the command "library" to all elements of the list x we created in the preceding line of code
+x = c("tidyverse", "dplyr", "plyr", "ggplot2", "ggThemeAssist", "dismo", "readxl")
+lapply(x, library, character.only=TRUE)
+
+# Setting working directory -----------------------------------------------
+# The working directory is the folder that R is working within when you are loading in datasets or saving files. 
+
+# In Rstudio, you can navigate to the desired folder in the "Files" tab in the bottom right pane, click on the
+# "More" button in the tool bar at the top of the pane, then select "Set As Working Directory"
+
+# If you know the pathway to the folder you want your directory to be in, you can use setwd() to set the working directory
+# Please note that the following pathway is set up for a Mac OS and the formatting may be different for a Windows computer.
+setwd("~/Desktop/R_Code")
+
+# This command will print out the currently assigned working directory in the console pane. 
+#This is also a good way to see how the file pathway is formatted for your operating system.
+getwd()
+
+# Reading in datasets ------------------------------------------------------
+# One of the main functionalities of R is being able to read in pre-existing datasets to further manipulate or analyze.
+# ***If you are having trouble reading in data, check to make sure your working directory is where your files are located!!***
+
+# Reading in csv files
+csv_example = read.csv("Practice_csv_dataset.csv")
+
+# Reading in excel files. The readxl library must be loaded to read in excel files!
+# The number at the end of the command tells R which sheet in the workbook to pull from 
+excel_example = read_xlsx("Practice_excel_dataset.xlsx", 1)
+
+# You can also export data frames from R. An example is below in the Pulling Data section.
+
+
+
+#Let's try some plotting! We will be pulling data from the Global Biodiversity Information Facility (GBIF).
+#Pick your favorite animal (or you can use the species for your wildlife management plan) and look up its species name.
+
+#The dismo library is the library we will use to access the GBIF database.
+
+library(dismo)
+library(beepr)
+#Choose a name for your dataset and plug in the genus and species names of your organism. 
+#It will probably take awhile for the dataset to download
+
+Species = gbif("Callinectes", "sapidus"); beep(3)
+
+#There is more information in the dataset than we will need, so we will subset it to only include columns we need.
+# This line of code tells R the columns we want: "species" and "year". 
+# It also specifies that we only want observations from the "year" column to be between 1990 and 2009
+Species_Year = subset(Species, select= c('species', 'year'), Species$year >= 1990 & Species$year <= 2009)
+
+#Now that the dataset is smaller, we need to calculate how many observations of the species were made each year. We can do this by counting the number
+# of rows that have the same year in the "year" column. This is because each line in a GBIF dataset is a single observation of the species of interest.
+
+# ddply() is a function from the plyr library that allows you to group together rows of data based on variable within the dataframe.
+# In this example, we are grouping all of the rows of data with the same year together and then counting up how many observations or occurences
+# were observed. It applies the function to the whole dataset and returns a dataframe with the grouping variable and the columns created through the 
+# specified functions--in this case, the dataframe will have two columns: year and occurence.
+
+Species_Occ = ddply(Species_Year, ("year"), summarize, 
+                    occurence = length(species))
+
+# If you want to save a dataframe that you have created or reorganized within R, you can use the write_csv or write.csv commands
+write_csv(Species_Occ, "Blue Crab_Occurence.csv")
+
+
+# Basic Plotting ---------------------------------------------------------------
+
+#Using the data we pulled from the GBIF database, we will use ggplot to plot the number of occurrences per year as a line graph, and as a bar graph.
+
+#Line plot
+# Within the ggplot() function, you list the name of your dataframe and the x and y variables 
+Species_line = ggplot(Species_Occ, aes(year, occurence)) +
+  geom_point(color = "purple", shape = 1) +
+  geom_line(color = "green", linetype = 2) +
+  theme_classic() +
+  labs(title = "Occurences of Blue Crab from 1990-2009", x = "Year", y = "Number of Occurences")
+
+plot(Species_line)
+
+
+#Bar plot
+Species_bar = ggplot(Species_Occ, aes(year, occurence)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  theme_classic() +
+  labs(title = "Occurences of Blue Crab from 1990-2009", x = "Year", y = "Number of Occurences")
+
+plot(Species_bar)
 
 
 # Organizing your code ----------------------------------------------------
@@ -94,8 +211,9 @@ z = seq(1, 5, by = 0.5)
 # Next move your cursor into the open line you just created. Insert your section titled "Introduction" in this line using your preferred method.
 
 
-# Using "#" allows you to add comments to your code. Text that is commented out (has the # symbol in front of it
-# will be ignored by R as it runs your code.
+# Using "#" allows you to add comments to your code. Text that is commented out (has the # symbol in front of it)
+# will be ignored by R as it runs your code. As you can see with this script, comments allow you to annotate your code
+# so it is easier for others to understand and serves as a reminder to yourself what each section of code is supposed to be doing.
 
 
 

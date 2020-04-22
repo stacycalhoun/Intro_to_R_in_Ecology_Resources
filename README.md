@@ -9,5 +9,5 @@ a coding component.
 The Intro to R lab exercise introduces some basic coding concepts and is designed to have the instructor walk through it
 with the students so that additional instructions or tailoring the code/concepts for the specific course can be made.
 
-Cheat sheets are downloaded from the rstudio.com under the resources->cheatsheets tabs.
+Cheat sheets are downloaded from the rstudio website under the resources->cheatsheets tabs.
 

@@ -1,18 +1,19 @@
 # Introduction to Coding in R lab exercise. 
 # In this script, you will learn some of the basics of coding in R. 
 # Additional resources, such as an orientation to RStudio, can be found in the GitHub repository: https://github.com/stacycalhoun/R_resources
-# Compiled by Stacy Calhoun
+# Compiled and Developed by Stacy Calhoun
 
 # R is an open source programming language and software that can be used to manipulate datasets, create maps,
 # organize files, and perform statistical analyses. There are many functionalities to R, but only a few are addressed in this script.
 # Important reminders: 
-  # R will only do what you tell it to do! It can't read your mind, no matter how much you wish it could.
-  # R is very picky--> capitalizations, spacings, and underscores matter! If R can't find an object you've created--> Check your spelling!
-  # Google and Stack Overflow are your friends! Can't remember a command? Google it! Getting an error you don't understand? Google it!
-  # Don't be afraid to use and adapt other people's code! No one remembers everything off the top of their heads and if someone else has a
-  #   script that works, use it! Don't feel like you have to reinvent the wheel!
-  # Not sure what a function or command does? In the console pane, type ?+the function you want more information about (example: ?ddply) and hit enter.
-  #   The description of the function will show up under the "Help tab" in the bottom right pane.
+  # 1. R will only do what you tell it to do! It can't read your mind, no matter how much you wish it could. You're giving the computer instructions to follow so they need to be step-by-step. 
+  # 2. R is very picky--> capitalizations, spacings, and underscores matter! If R can't find an object you've created--> Check your spelling!
+  #    Additionally, it may be that you are wanting R to reference something that is named, but not an object, in which case you might need to add quotes "" or ''     
+  # 3. Google and Stack Overflow are your friends! Can't remember a command? Google it! Getting an error you don't understand? Google it!
+  # 4. Don't be afraid to use and adapt other people's code! No one remembers everything off the top of their heads and if someone else has a
+  #    script that works, use it! Don't feel like you have to reinvent the wheel!
+  # 5. Not sure what a function or command does? In the console pane, type ?+the function you want more information about (example: ?ddply) and hit enter.
+  #    The description of the function will show up under the "Help tab" in the bottom right pane.
 
 # To run a line of code, you can: place your cursor in the line you wish to run or highlight the line or lines of code
 # and click "Run" at the top of the code editor pane OR you can use the keyboard shortcut ctrl+enter for Windows or command+enter for Macs
@@ -99,7 +100,7 @@ z = seq(1, 5, by = 0.5)
 # As with many things, there is more than one way to install packages.
 
 # Method one
-install.packages("tidyverse", "dplyr", "plyr", "ggplot2", "ggThemeAssist", "dismo", "readxl")
+install.packages("tidyverse", "dplyr", "plyr", "ggplot2", "ggThemeAssist", "dismo", "readxl", "data.table")
 
 # Method 2 (my preferred method): Go to "Tools" in the menu bar at the top of the screen. Select "Install Packages". A screen will pop up that will
 # allow you to type in a list of packages. 
@@ -110,6 +111,7 @@ install.packages("tidyverse", "dplyr", "plyr", "ggplot2", "ggThemeAssist", "dism
 library(tidyverse)
 library(plyr)
 library(readxl)
+library(data.table)
 
 #Loading lots of packages. The lapply() function here applies the command "library" to all elements of the list x we created in the preceding line of code
 x = c("tidyverse", "dplyr", "plyr", "ggplot2", "ggThemeAssist", "dismo", "readxl")
@@ -143,16 +145,35 @@ excel_example = read_xlsx("Practice_excel_dataset.xlsx", 1)
 # You can also export data frames from R. An example is below in the Pulling Data section.
 
 
+# Built in datasets -------------------------------------------------------
 
-#Let's try some plotting! We will be pulling data from the Global Biodiversity Information Facility (GBIF).
-#Pick your favorite animal (or you can use the species for your wildlife management plan) and look up its species name.
+# R has datasets that are built in and can be used as practice dataframes for your code.
+# To see the list of built in datasets in the datasets package use this command
+data()
+# To see all available datasets, as other packages have built-in datasets as well, use the following code
+data(package = .packages(all.available = TRUE))
 
-#The dismo library is the library we will use to access the GBIF database.
+# To use a built in dataset, find the name of the dataset you want to utilize, and use the following lines of code. 
+# You should see the dataset listed under the "Environment" tab in the upper right pane after you run the second line of code.
+# The summary() command here will print out summarized information about each column in the dataframe in the console below.
+
+data("mtcars")
+summary(mtcars)
+
+# Pulling data from external databases --------------------------------------------------------
+
+# Depending on the type of data or analysis you are doing, you can also use R to pull data from large databases.
+# To demonstrate this, we will be pulling data from the Global Biodiversity Information Facility (GBIF).
+# Pick your favorite animal (or you can use the species for your wildlife management plan) and look up its species name.
+
+# The dismo library is the library we will use to access the GBIF database. The beepr library is a fun add-on that allows you
+# to add sounds that will play once a function is complete.
 
 library(dismo)
 library(beepr)
-#Choose a name for your dataset and plug in the genus and species names of your organism. 
-#It will probably take awhile for the dataset to download
+
+# Choose a name for your dataset (currently names Species) and plug in the genus and species names of your organism. 
+# It will probably take awhile for the dataset to download
 
 Species = gbif("Callinectes", "sapidus"); beep(3)
 
@@ -176,13 +197,46 @@ Species_Occ = ddply(Species_Year, ("year"), summarize,
 write_csv(Species_Occ, "Blue Crab_Occurence.csv")
 
 
+# Editing dataframes ------------------------------------------------------
+
+# In R, you can change the names of columns, add or delete columns, and change the order of columns
+
+# Changing column names
+
+# Changing the name of a single column by referencing dataframe and the number of the column that is getting renamed
+colnames(mtcars)[1] = "Miles_per_gal"
+#Changing name by referring to the old name using rename from the plyr library 
+mtcars = rename(mtcars, c("cyl" = "cylinders"))
+
+# Changing the names of all of the columns using Species_Occ dataframe created above and the setnames function from data.table.
+Species_Occ = setnames(Species_Occ, old = c("year", "occurence"), new = c("Year", "Occ") ) 
+
+# Changing multiple, but not all names of a dataframe using names function with the mtcars dataframe with altered column names
+names(mtcars)[names(mtcars) %in% c("Miles_per_gal", "cylinders", "hp")] = c("mpg", "cyl", "horsepower")
+
+# Adding a column
+# Say I wanted to add a column with the Species name to my Species_Occ dataframe. I would do the following.
+# The $ here references a column in the dataframe Species_Occ. Since that column doesn't currently exist, it creates a new one
+# and fills it with what is on the right side of the = in this case, "Callinectes_sapidus"
+Species_Occ$Species = "Callinectes_sapidus"
+
+# You can also use this format to create a new column with a function applied. 
+# In this example, we are adding 1 and taking the log of all occurence values and storing them in a new column call Transformed_Occ
+
+Species_Occ$Transformed_Occ = log(Species_Occ$Occ + 1)
+
+# Deleting a column
+# If you need to remove a column, you can do the following. In this example we are deleting the Transform_Occ column created in the preceding lines of code
+
+Species_Occ$Transformed_Occ = NULL
+
 # Basic Plotting ---------------------------------------------------------------
 
 #Using the data we pulled from the GBIF database, we will use ggplot to plot the number of occurrences per year as a line graph, and as a bar graph.
 
 #Line plot
 # Within the ggplot() function, you list the name of your dataframe and the x and y variables 
-Species_line = ggplot(Species_Occ, aes(year, occurence)) +
+Species_line = ggplot(Species_Occ, aes(Year, Occ)) +
   geom_point(color = "purple", shape = 1) +
   geom_line(color = "green", linetype = 2) +
   theme_classic() +
@@ -192,7 +246,7 @@ plot(Species_line)
 
 
 #Bar plot
-Species_bar = ggplot(Species_Occ, aes(year, occurence)) +
+Species_bar = ggplot(Species_Occ, aes(Year, Occ)) +
   geom_bar(stat = "identity", fill = "blue") +
   theme_classic() +
   labs(title = "Occurences of Blue Crab from 1990-2009", x = "Year", y = "Number of Occurences")

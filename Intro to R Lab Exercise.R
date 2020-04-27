@@ -1,4 +1,4 @@
-# Introduction to Coding in R lab exercise. 
+# Introduction to Coding in R for Ecology lab exercise. 
 # In this script, you will learn some of the basics of coding in R. 
 # Additional resources, such as an orientation to RStudio, can be found in the GitHub repository: https://github.com/stacycalhoun/R_resources
 # Compiled and Developed by Stacy Calhoun
